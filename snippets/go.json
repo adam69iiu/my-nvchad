@@ -1,0 +1,199 @@
+{
+  "If error return": {
+    "prefix": "iferr",
+    "body": [
+      "if err != nil {",
+      "\t${1:err}",
+      "}"
+    ],
+    "description": "if err != nil return err"
+  },
+
+  "JSON DB tag": {
+    "prefix": "jdb",
+    "body": "`json:\"${1:field}\" db:\"${1:field}\"`",
+    "description": "json and db struct tags"
+  },
+
+  "JSON tag": {
+    "prefix": "jtag",
+    "body": "`json:\"${1:field}\"`",
+    "description": "json struct tag"
+  },
+
+  "DB tag": {
+    "prefix": "dbtag",
+    "body": "`db:\"${1:field}\"`",
+    "description": "db struct tag"
+  },
+
+  "Struct field with tags": {
+    "prefix": "sfield",
+    "body": "${1:FieldName} ${2:string} `json:\"${3:field_name}\" db:\"${3:field_name}\"`",
+    "description": "Struct field with json and db tags"
+  },
+
+  "UUID field": {
+    "prefix": "uuidf",
+    "body": "${1:ID} uuid.UUID `json:\"${2:id}\" db:\"${2:id}\"`",
+    "description": "UUID struct field"
+  },
+
+  "Time field": {
+    "prefix": "timef",
+    "body": "${1:CreatedAt} time.Time `json:\"${2:created_at}\" db:\"${2:created_at}\"`",
+    "description": "time.Time struct field"
+  },
+
+  "Nullable Time field": {
+    "prefix": "ntimef",
+    "body": "${1:DeletedAt} *time.Time `json:\"${2:deleted_at}\" db:\"${2:deleted_at}\"`",
+    "description": "Nullable time.Time struct field"
+  },
+
+  "Nullable String field": {
+    "prefix": "nstrf",
+    "body": "${1:Field} *string `json:\"${2:field},omitempty\" db:\"${2:field}\"`",
+    "description": "Nullable string struct field"
+  },
+
+  "JSON omitempty tag": {
+    "prefix": "jomit",
+    "body": "`json:\"${1:field},omitempty\" db:\"${1:field}\"`",
+    "description": "json omitempty and db struct tags"
+  },
+
+  "DB model struct": {
+    "prefix": "dbmodel",
+    "body": [
+      "type ${1:ModelName} struct {",
+      "\tID        uuid.UUID  `json:\"id\" db:\"id\"`",
+      "\t${2:Field}     ${3:string}    `json:\"${4:field}\" db:\"${4:field}\"`",
+      "\tCreatedAt time.Time  `json:\"created_at\" db:\"created_at\"`",
+      "\tUpdatedAt time.Time  `json:\"updated_at\" db:\"updated_at\"`",
+      "}"
+    ],
+    "description": "DB model struct with uuid and timestamps"
+  },
+
+  "JSON ignore tag": {
+    "prefix": "jignore",
+    "body": "`json:\"-\" db:\"${1:field}\"`",
+    "description": "json ignore tag with db tag"
+  },
+
+  "Row Scan": {
+    "prefix": "scan",
+    "body": "err := ${1:row}.Scan(&${2:v}.${3:Field1}, &${2:v}.${4:Field2})",
+    "description": "row.Scan into struct fields"
+  },
+
+  "QueryRow + Scan": {
+    "prefix": "qscan",
+    "body": [
+      "${1:row} := ${2:db}.QueryRowContext(${3:ctx}, ${4:query}, ${5:args})",
+      "err := ${1:row}.Scan(",
+      "\t&${6:v}.${7:Field1},",
+      "\t&${6:v}.${8:Field2},",
+      ")",
+      "if err != nil {",
+      "\treturn ${9:nil, }err",
+      "}"
+    ],
+    "description": "QueryRowContext + Scan"
+  },
+
+  "sqlx Get": {
+    "prefix": "xget",
+    "body": [
+      "var ${1:v} ${2:ModelName}",
+      "err := ${3:db}.GetContext(${4:ctx}, &${1:v}, ${5:query}, ${6:args})",
+      "if err != nil {",
+      "\treturn ${7:nil, }err",
+      "}"
+    ],
+    "description": "sqlx GetContext into struct"
+  },
+
+  "sqlx Select": {
+    "prefix": "xsel",
+    "body": [
+      "var ${1:results} []${2:ModelName}",
+      "err := ${3:db}.SelectContext(${4:ctx}, &${1:results}, ${5:query}, ${6:args})",
+      "if err != nil {",
+      "\treturn ${7:nil, }err",
+      "}"
+    ],
+    "description": "sqlx SelectContext into slice"
+  },
+
+  "sqlx NamedExec": {
+    "prefix": "xnamed",
+    "body": [
+      "_, err ${1::}= ${2:db}.NamedExecContext(${3:ctx}, ${4:query}, ${5:v})",
+      "if err != nil {",
+      "\treturn ${6:err}",
+      "}"
+    ],
+    "description": "sqlx NamedExecContext"
+  },
+
+  "Rows loop": {
+    "prefix": "rowsloop",
+    "body": [
+      "rows, err := ${1:db}.QueryContext(${2:ctx}, ${3:query}, ${4:args})",
+      "if err != nil {",
+      "\treturn ${5:nil, }err",
+      "}",
+      "defer rows.Close()",
+      "",
+      "var ${6:results} []${7:ModelName}",
+      "for rows.Next() {",
+      "\tvar ${8:v} ${7:ModelName}",
+      "\tif err := rows.Scan(&${8:v}.${9:Field1}, &${8:v}.${10:Field2}); err != nil {",
+      "\t\treturn ${5:nil, }err",
+      "\t}",
+      "\t${6:results} = append(${6:results}, ${8:v})",
+      "}",
+      "if err := rows.Err(); err != nil {",
+      "\treturn ${5:nil, }err",
+      "}"
+    ],
+    "description": "Query rows loop with scan"
+  },
+
+  "sqlx Rows loop": {
+    "prefix": "xrowsloop",
+    "body": [
+      "rows, err := ${1:db}.QueryxContext(${2:ctx}, ${3:query}, ${4:args})",
+      "if err != nil {",
+      "\treturn ${5:nil, }err",
+      "}",
+      "defer rows.Close()",
+      "",
+      "var ${6:results} []${7:ModelName}",
+      "for rows.Next() {",
+      "\tvar ${8:v} ${7:ModelName}",
+      "\tif err := rows.StructScan(&${8:v}); err != nil {",
+      "\t\treturn ${5:nil, }err",
+      "\t}",
+      "\t${6:results} = append(${6:results}, ${8:v})",
+      "}",
+      "if err := rows.Err(); err != nil {",
+      "\treturn ${5:nil, }err",
+      "}"
+    ],
+    "description": "sqlx QueryxContext rows loop with StructScan"
+  },
+
+  "Exec with error check": {
+    "prefix": "exec",
+    "body": [
+      "_, err ${1::}= ${2:db}.ExecContext(${3:ctx}, ${4:query}, ${5:args})",
+      "if err != nil {",
+      "\treturn ${6:err}",
+      "}"
+    ],
+    "description": "ExecContext with error check"
+  }
+}

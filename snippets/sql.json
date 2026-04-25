@@ -1,0 +1,358 @@
+{
+  "Create Table": {
+    "prefix": "ctable",
+    "body": [
+      "CREATE TABLE ${1:table_name} (",
+      "  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),",
+      "  ${2:column} ${3:VARCHAR(255)} NOT NULL,",
+      "  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),",
+      "  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()",
+      ");"
+    ],
+    "description": "Create a PostgreSQL table"
+  },
+
+  "Create Table with Serial": {
+    "prefix": "ctables",
+    "body": [
+      "CREATE TABLE ${1:table_name} (",
+      "  id BIGSERIAL PRIMARY KEY,",
+      "  ${2:column} ${3:VARCHAR(255)} NOT NULL,",
+      "  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),",
+      "  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()",
+      ");"
+    ],
+    "description": "Create a PostgreSQL table with serial id"
+  },
+
+  "Add Column": {
+    "prefix": "addcol",
+    "body": "ALTER TABLE ${1:table_name} ADD COLUMN ${2:column_name} ${3:VARCHAR(255)} ${4:NOT NULL};",
+    "description": "ALTER TABLE ADD COLUMN"
+  },
+
+  "Drop Column": {
+    "prefix": "dropcol",
+    "body": "ALTER TABLE ${1:table_name} DROP COLUMN ${2:column_name};",
+    "description": "ALTER TABLE DROP COLUMN"
+  },
+
+  "Drop Table": {
+    "prefix": "dtable",
+    "body": "DROP TABLE IF EXISTS ${1:table_name};",
+    "description": "Drop table if exists"
+  },
+
+  "Create Index": {
+    "prefix": "cidx",
+    "body": "CREATE INDEX ${1:idx_name} ON ${2:table_name} (${3:column_name});",
+    "description": "Create index"
+  },
+
+  "Create Unique Index": {
+    "prefix": "cidxu",
+    "body": "CREATE UNIQUE INDEX ${1:idx_name} ON ${2:table_name} (${3:column_name});",
+    "description": "Create unique index"
+  },
+
+  "Select": {
+    "prefix": "sel",
+    "body": "SELECT ${1:*} FROM ${2:table_name} WHERE ${3:condition};",
+    "description": "SELECT statement"
+  },
+
+  "Select All": {
+    "prefix": "sela",
+    "body": "SELECT * FROM ${1:table_name};",
+    "description": "SELECT all"
+  },
+
+  "Insert": {
+    "prefix": "ins",
+    "body": [
+      "INSERT INTO ${1:table_name} (${2:columns})",
+      "VALUES (${3:values});"
+    ],
+    "description": "INSERT statement"
+  },
+
+  "Insert Returning": {
+    "prefix": "insr",
+    "body": [
+      "INSERT INTO ${1:table_name} (${2:columns})",
+      "VALUES (${3:values})",
+      "RETURNING ${4:*};"
+    ],
+    "description": "INSERT with RETURNING"
+  },
+
+  "Update": {
+    "prefix": "upd",
+    "body": [
+      "UPDATE ${1:table_name}",
+      "SET ${2:column} = ${3:value}",
+      "WHERE ${4:condition};"
+    ],
+    "description": "UPDATE statement"
+  },
+
+  "Update Returning": {
+    "prefix": "updr",
+    "body": [
+      "UPDATE ${1:table_name}",
+      "SET ${2:column} = ${3:value}",
+      "WHERE ${4:condition}",
+      "RETURNING ${5:*};"
+    ],
+    "description": "UPDATE with RETURNING"
+  },
+
+  "Delete": {
+    "prefix": "del",
+    "body": "DELETE FROM ${1:table_name} WHERE ${2:condition};",
+    "description": "DELETE statement"
+  },
+
+  "Transaction": {
+    "prefix": "txn",
+    "body": [
+      "BEGIN;",
+      "",
+      "${1:-- statements}",
+      "",
+      "COMMIT;"
+    ],
+    "description": "Transaction block"
+  },
+
+  "UUID type": {
+    "prefix": "uuid",
+    "body": "UUID",
+    "description": "UUID type"
+  },
+
+  "UUID default": {
+    "prefix": "uuidd",
+    "body": "UUID DEFAULT gen_random_uuid()",
+    "description": "UUID with gen_random_uuid()"
+  },
+
+  "VARCHAR": {
+    "prefix": "varchar",
+    "body": "VARCHAR(${1:255})",
+    "description": "VARCHAR type"
+  },
+
+  "TIMESTAMPTZ": {
+    "prefix": "tstz",
+    "body": "TIMESTAMPTZ NOT NULL DEFAULT NOW()",
+    "description": "Timestamp with timezone and default"
+  },
+
+  "JSONB": {
+    "prefix": "jsonb",
+    "body": "JSONB",
+    "description": "JSONB type"
+  },
+
+  "NUMERIC": {
+    "prefix": "num",
+    "body": "NUMERIC(${1:10}, ${2:2})",
+    "description": "NUMERIC type with precision"
+  },
+
+  "Foreign Key": {
+    "prefix": "fk",
+    "body": "${1:column_name}_id UUID NOT NULL REFERENCES ${2:table_name}(id)",
+    "description": "Foreign key column"
+  },
+
+  "Foreign Key Constraint": {
+    "prefix": "fkc",
+    "body": "CONSTRAINT fk_${1:name} FOREIGN KEY (${2:column}) REFERENCES ${3:table_name}(${4:id}) ON DELETE ${5:CASCADE}",
+    "description": "Foreign key constraint"
+  },
+
+  "Enable UUID extension": {
+    "prefix": "extuuid",
+    "body": "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";",
+    "description": "Enable uuid-ossp extension"
+  },
+
+  "Enable pgcrypto": {
+    "prefix": "extcrypto",
+    "body": "CREATE EXTENSION IF NOT EXISTS pgcrypto;",
+    "description": "Enable pgcrypto extension"
+  },
+
+  "Timestamps columns": {
+    "prefix": "timestamps",
+    "body": [
+      "created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),",
+      "updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()"
+    ],
+    "description": "created_at and updated_at columns"
+  },
+
+  "Soft Delete": {
+    "prefix": "softdel",
+    "body": "deleted_at TIMESTAMPTZ",
+    "description": "Soft delete column"
+  },
+
+  "Join": {
+    "prefix": "join",
+    "body": "JOIN ${1:table_name} ON ${2:table_name}.${3:id} = ${4:other_table}.${5:column}",
+    "description": "JOIN clause"
+  },
+
+  "Left Join": {
+    "prefix": "ljoin",
+    "body": "LEFT JOIN ${1:table_name} ON ${2:table_name}.${3:id} = ${4:other_table}.${5:column}",
+    "description": "LEFT JOIN clause"
+  },
+
+  "Truncate": {
+    "prefix": "trunc",
+    "body": "TRUNCATE TABLE ${1:table_name} RESTART IDENTITY CASCADE;",
+    "description": "Truncate table"
+  },
+
+  "NULL": {
+    "prefix": "nu",
+    "body": "NULL",
+    "description": "NULL keyword"
+  },
+
+  "NOT NULL": {
+    "prefix": "nn",
+    "body": "NOT NULL",
+    "description": "NOT NULL constraint"
+  },
+
+  "REFERENCES": {
+    "prefix": "ref",
+    "body": "REFERENCES ${1:table_name}(${2:id})",
+    "description": "REFERENCES keyword"
+  },
+
+  "CONSTRAINT": {
+    "prefix": "con",
+    "body": "CONSTRAINT ${1:constraint_name}",
+    "description": "CONSTRAINT keyword"
+  },
+
+  "DEFAULT": {
+    "prefix": "def",
+    "body": "DEFAULT ${1:value}",
+    "description": "DEFAULT keyword"
+  },
+
+  "PRIMARY KEY": {
+    "prefix": "pk",
+    "body": "PRIMARY KEY",
+    "description": "PRIMARY KEY constraint"
+  },
+
+  "UNIQUE": {
+    "prefix": "uniq",
+    "body": "UNIQUE",
+    "description": "UNIQUE constraint"
+  },
+
+  "CHECK": {
+    "prefix": "chk",
+    "body": "CHECK (${1:condition})",
+    "description": "CHECK constraint"
+  },
+
+  "CASCADE": {
+    "prefix": "cas",
+    "body": "CASCADE",
+    "description": "CASCADE action"
+  },
+
+  "RESTRICT": {
+    "prefix": "res",
+    "body": "RESTRICT",
+    "description": "RESTRICT action"
+  },
+
+  "SET NULL": {
+    "prefix": "sn",
+    "body": "SET NULL",
+    "description": "SET NULL action"
+  },
+
+  "NO ACTION": {
+    "prefix": "na",
+    "body": "NO ACTION",
+    "description": "NO ACTION (default FK action)"
+  },
+
+  "ON DELETE CASCADE": {
+    "prefix": "odc",
+    "body": "ON DELETE CASCADE",
+    "description": "ON DELETE CASCADE"
+  },
+
+  "ON DELETE SET NULL": {
+    "prefix": "odsn",
+    "body": "ON DELETE SET NULL",
+    "description": "ON DELETE SET NULL"
+  },
+
+  "ON UPDATE CASCADE": {
+    "prefix": "ouc",
+    "body": "ON UPDATE CASCADE",
+    "description": "ON UPDATE CASCADE"
+  },
+
+  "INTEGER": {
+    "prefix": "int",
+    "body": "INTEGER",
+    "description": "INTEGER type"
+  },
+
+  "BIGINT": {
+    "prefix": "bint",
+    "body": "BIGINT",
+    "description": "BIGINT type"
+  },
+
+  "BOOLEAN": {
+    "prefix": "bool",
+    "body": "BOOLEAN",
+    "description": "BOOLEAN type"
+  },
+
+  "TEXT": {
+    "prefix": "txt",
+    "body": "TEXT",
+    "description": "TEXT type"
+  },
+
+  "SERIAL": {
+    "prefix": "ser",
+    "body": "SERIAL",
+    "description": "SERIAL type"
+  },
+
+  "BIGSERIAL": {
+    "prefix": "bser",
+    "body": "BIGSERIAL",
+    "description": "BIGSERIAL type"
+  },
+
+  "REAL": {
+    "prefix": "rl",
+    "body": "REAL",
+    "description": "REAL (float4) type"
+  },
+
+  "DOUBLE PRECISION": {
+    "prefix": "dp",
+    "body": "DOUBLE PRECISION",
+    "description": "DOUBLE PRECISION (float8) type"
+  }
+}

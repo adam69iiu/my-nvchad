@@ -1,0 +1,10 @@
+{
+  "name": "nvim-snippets",
+  "engines": { "vscode": "*" },
+  "contributes": {
+    "snippets": [
+      { "language": "sql", "path": "./sql.json" },
+      { "language": "go", "path": "./go.json" }
+    ]
+  }
+}
